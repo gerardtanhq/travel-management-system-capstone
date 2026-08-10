@@ -7,7 +7,7 @@ export default function EntitiesList({ entities, onDelete, selectedEntities, onS
             <div>
                 {entities.map((entity) => {
                     return (
-                        <div key={entity.id} data-testid={EntityTestId}>
+                        <div key={entity.travelID} data-testid={EntityTestId}>
                             <Entity
                                 entity={entity}
                                 onDelete={onDelete}

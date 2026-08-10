@@ -8,19 +8,19 @@ export default function Entity({ entity, onDelete, selectedEntities, onSelectEnt
                 <input
                     type="checkbox"
                     data-testid={EntitySelectTestId}
-                    checked={selectedEntities.includes(entity.id)}
-                    onChange={() => onSelectEntity(entity.id)}
+                    checked={selectedEntities.includes(entity.travelID)}
+                    onChange={() => onSelectEntity(entity.travelID)}
                 />
 
-                <img src={entity.image} alt={entity.name} className="entity-image" />
+                <img src={entity.imageURL} alt={entity.title} className="entity-image" />
 
                 <div className="entity-details">
                     <div className="entity-main">
                         <div>
-                            <div className="entity-name">{entity.name}</div>
+                            <div className="entity-name">{entity.title}</div>
 
                             <div className="entity-category" data-testid={EntityCategoryTestId}>
-                                {entity.category}
+                                {entity.country}
                             </div>
                         </div>
 
@@ -28,14 +28,14 @@ export default function Entity({ entity, onDelete, selectedEntities, onSelectEnt
                     </div>
 
                     <div className="entity-footer">
-                        <div className="entity-id">ID: {entity.id}</div>
+                        <div className="entity-id">ID: {entity.travelID}</div>
 
                         <div className="entity-actions">
-                            <Link className="details-button" to={`/food/${entity.id}`}>
+                            <Link className="details-button" to={`/travel/${entity.travelID}`}>
                                 View Details
                             </Link>
 
-                            <button data-testid={EntityDeleteTestId} onClick={() => onDelete(entity.id)}>
+                            <button data-testid={EntityDeleteTestId} onClick={() => onDelete(entity.travelID)}>
                                 Delete
                             </button>
                         </div>
