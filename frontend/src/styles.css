@@ -205,6 +205,10 @@ button:hover {
     box-shadow: 0 8px 16px rgba(244, 63, 94, 0.35);
 }
 
+.travel-period-inputs input {
+    width: 90px;
+}
+
 /* Entity Cards Styling Entity.js */
 
 .entity-card {

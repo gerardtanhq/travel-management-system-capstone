@@ -5,10 +5,12 @@ import FilterEntitiesForm from '../FilterEntitiesForm.js';
 import { addTravel, deleteTravel, deleteSelectedTravels, toggleSelectedEntity } from '../features/travel/travelSlice.js';
 import Navbar from '../Navbar.js';
 import LoginForm from '../LoginForm';
+import { API_URL } from '../config.js';
 
 export default function HomePage() {
     const dispatch = useDispatch();
 
+    const token = useSelector((state) => state.auth.token);
     const entities = useSelector((state) => state.travel.entities);
     const selectedCountries = useSelector((state) => state.travel.selectedCountries);
     const selectedEntities = useSelector((state) => state.travel.selectedEntities);
@@ -20,8 +22,6 @@ export default function HomePage() {
             ? entities
             : entities.filter((entity) => selectedCountries.includes(entity.country));
 
-    const generateId = () => Date.now();
-
     const toTitleCase = (text) =>
         text
             .toLowerCase()
@@ -29,9 +29,35 @@ export default function HomePage() {
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
 
-    const handleAdd = (newTravel) => {
+    const handleAdd = async (newTravel) => {
+        const response = await fetch(
+            `${API_URL}/travel`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    title: toTitleCase(newTravel.title),
+                    description: newTravel.description,
+                    price: Number(newTravel.price),
+                    country: toTitleCase(newTravel.country),
+                    travelPeriod: newTravel.travelPeriod,
+                    imageURL: newTravel.imageURL,
+                }),
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || 'Unable to add travel.');
+            return;
+        }
+
         const travelToAdd = {
-            travelID: generateId(),
+            travelID: data.travelID,
             title: toTitleCase(newTravel.title),
             description: newTravel.description,
             price: Number(newTravel.price),
@@ -57,7 +83,7 @@ export default function HomePage() {
 
             <LoginForm />
 
-            <AddEntityForm onAdd={handleAdd} />
+            {token && <AddEntityForm onAdd={handleAdd} />}
 
             <div className="content-layout">
                 <FilterEntitiesForm
