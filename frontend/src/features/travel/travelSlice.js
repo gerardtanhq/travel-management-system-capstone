@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     entities: [
         {
-            travelID: 1,
+            travelID: 10001,
             title: 'Japan Discovery',
             description: 'Explore the highlights of Tokyo, Kyoto and Osaka.',
             price: 2500,
@@ -12,7 +12,7 @@ const initialState = {
             imageURL: '',
         },
         {
-            travelID: 2,
+            travelID: 10002,
             title: 'Korea Adventure',
             description: 'Discover the best attractions in Seoul and Busan.',
             price: 1800,
@@ -21,7 +21,7 @@ const initialState = {
             imageURL: '',
         },
         {
-            travelID: 3,
+            travelID: 10003,
             title: 'Thailand Escape',
             description: 'Enjoy the vibrant city of Bangkok and beautiful Phuket.',
             price: 1200,
@@ -30,7 +30,7 @@ const initialState = {
             imageURL: '',
         },
         {
-            travelID: 4,
+            travelID: 10004,
             title: 'Taiwan Explorer',
             description: 'Experience the food, culture and scenery of Taiwan.',
             price: 1500,
@@ -39,7 +39,7 @@ const initialState = {
             imageURL: '',
         },
         {
-            travelID: 5,
+            travelID: 10005,
             title: 'Australia Getaway',
             description: 'Visit the famous sights and attractions of Sydney.',
             price: 2800,
@@ -48,7 +48,7 @@ const initialState = {
             imageURL: '',
         },
         {
-            travelID: 6,
+            travelID: 10006,
             title: 'Vietnam Experience',
             description: 'Explore the culture and scenery of Hanoi and Ha Long Bay.',
             price: 1300,
