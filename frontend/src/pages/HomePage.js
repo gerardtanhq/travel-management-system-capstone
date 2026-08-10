@@ -4,6 +4,7 @@ import AddEntityForm from '../AddEntityForm.js';
 import FilterEntitiesForm from '../FilterEntitiesForm.js';
 import { addFood, deleteFood, deleteSelectedFoods, toggleSelectedEntity } from '../features/foods/foodsSlice.js';
 import Navbar from '../Navbar.js';
+import LoginForm from '../LoginForm';
 
 export default function HomePage() {
     const dispatch = useDispatch();
@@ -52,6 +53,8 @@ export default function HomePage() {
             <h1>Restaurant Management System</h1>
 
             <Navbar />
+
+            <LoginForm />
 
             <AddEntityForm onAdd={handleAdd} />
 

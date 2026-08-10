@@ -108,6 +108,41 @@ h2 {
     margin-top: 0;
 }
 
+.login-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    background-color: #eaf3ff;
+    padding: 20px;
+    margin-bottom: 30px;
+    border: 2px solid #93b9ff;
+    border-radius: 20px;
+    box-shadow: 0 6px 16px rgba(39, 78, 145, 0.12);
+}
+
+.login-container h2 {
+    margin: 0;
+    padding-right: 15px;
+}
+
+.login-container input[type="email"],
+.login-container input[type="password"] {
+    width: 180px;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background-color: white;
+}
+
+.logout-button {
+    margin-left: 20px;
+}
+
 form h2 {
     margin: 0;
     padding-right: 15px;
