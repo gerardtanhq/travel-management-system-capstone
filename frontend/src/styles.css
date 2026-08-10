@@ -302,7 +302,7 @@ button:hover {
     color: #64748b;
 }
 
-.food-details-card {
+.travel-details-card {
     background-color: #eaf3ff;
     border: 2px solid #93b9ff;
     border-radius: 20px;
@@ -311,7 +311,7 @@ button:hover {
     margin: 25px 0;
 }
 
-.food-image {
+.travel-image {
     display: block;
     width: 100%;
     max-width: 520px;
@@ -321,19 +321,19 @@ button:hover {
     margin: 0 auto 36px;
 }
 
-.food-details-card p {
+.travel-details-card p {
     display: flex;
     align-items: flex-start;
     margin: 18px 24px;
     line-height: 1.6;
 }
 
-.food-details-card strong {
+.travel-details-card strong {
     width: 130px;
     color: #274e91;
 }
 
-.food-details-card span {
+.travel-details-card span {
     flex: 1;
 }
 
@@ -384,13 +384,17 @@ button:hover {
     flex: 1;
 }
 
-/* Category Filter Styling FilterEntitiesForm.js */
+/* Country Filter Styling FilterEntitiesForm.js */
 
 .filter-options {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-bottom: 16px;
+}
+
+.filter-options button {
+    margin-top: 10px;
 }
 
 /* Responsive Layout */

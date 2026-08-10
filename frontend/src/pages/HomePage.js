@@ -2,25 +2,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import EntitiesList from '../EntitiesList.js';
 import AddEntityForm from '../AddEntityForm.js';
 import FilterEntitiesForm from '../FilterEntitiesForm.js';
-import { addFood, deleteFood, deleteSelectedFoods, toggleSelectedEntity } from '../features/foods/foodsSlice.js';
+import { addTravel, deleteTravel, deleteSelectedTravels, toggleSelectedEntity } from '../features/travel/travelSlice.js';
 import Navbar from '../Navbar.js';
 import LoginForm from '../LoginForm';
 
 export default function HomePage() {
     const dispatch = useDispatch();
 
-    const entities = useSelector((state) => state.foods.entities);
-    const selectedCategories = useSelector((state) => state.foods.selectedCategories);
-    const selectedEntities = useSelector((state) => state.foods.selectedEntities);
+    const entities = useSelector((state) => state.travel.entities);
+    const selectedCountries = useSelector((state) => state.travel.selectedCountries);
+    const selectedEntities = useSelector((state) => state.travel.selectedEntities);
 
-    const categories = [...new Set(entities.map((entity) => entity.category))];
+    const countries = [...new Set(entities.map((entity) => entity.country))];
 
     const filteredEntities =
-        selectedCategories.length === 0
+        selectedCountries.length === 0
             ? entities
-            : entities.filter((entity) => selectedCategories.includes(entity.category));
+            : entities.filter((entity) => selectedCountries.includes(entity.country));
 
-    const generateId = () => Math.random().toString(36).substring(2, 12).toUpperCase();
+    const generateId = () => Date.now();
 
     const toTitleCase = (text) =>
         text
@@ -29,28 +29,29 @@ export default function HomePage() {
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
 
-    const handleAdd = (newFood) => {
-        const foodToAdd = {
-            id: generateId(),
-            name: toTitleCase(newFood.name),
-            category: toTitleCase(newFood.category),
-            price: Number(newFood.price),
-            description: newFood.description,
-            image: newFood.image,
+    const handleAdd = (newTravel) => {
+        const travelToAdd = {
+            travelID: generateId(),
+            title: toTitleCase(newTravel.title),
+            description: newTravel.description,
+            price: Number(newTravel.price),
+            country: toTitleCase(newTravel.country),
+            travelPeriod: newTravel.travelPeriod,
+            imageURL: newTravel.imageURL,
         };
 
-        dispatch(addFood(foodToAdd));
+        dispatch(addTravel(travelToAdd));
     };
 
-    const handleDelete = (id) => dispatch(deleteFood(id));
+    const handleDelete = (travelID) => dispatch(deleteTravel(travelID));
 
-    const handleSelectEntity = (id) => dispatch(toggleSelectedEntity(id));
+    const handleSelectEntity = (travelID) => dispatch(toggleSelectedEntity(travelID));
 
-    const handleDeleteSelected = () => dispatch(deleteSelectedFoods());
+    const handleDeleteSelected = () => dispatch(deleteSelectedTravels());
 
     return (
         <div className="app-container">
-            <h1>Restaurant Management System</h1>
+            <h1>SP Travel</h1>
 
             <Navbar />
 
@@ -60,8 +61,8 @@ export default function HomePage() {
 
             <div className="content-layout">
                 <FilterEntitiesForm
-                    categories={categories}
-                    selectedCategories={selectedCategories}
+                    countries={countries}
+                    selectedCountries={selectedCountries}
                     onDeleteSelected={handleDeleteSelected}
                 />
 

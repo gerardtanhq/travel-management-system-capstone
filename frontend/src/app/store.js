@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import foodsReducer from '../features/foods/foodsSlice.js';
+import travelReducer from '../features/travel/travelSlice';
 import authReducer from '../features/auth/authSlice';
 
 export const store = configureStore({
     reducer: {
-        foods: foodsReducer,
+        travel: travelReducer,
         auth: authReducer,
     },
 });

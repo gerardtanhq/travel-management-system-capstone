@@ -2,66 +2,50 @@ import { useState } from 'react';
 import { AddEntityCategoryTestId, AddEntitySubmitTestId } from './testIds.js';
 
 export default function AddEntityForm({ onAdd }) {
-    const [name, setName] = useState('');
-    const [category, setCategory] = useState('');
+    const [title, setTitle] = useState('');
+    const [country, setCountry] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
-    const [image, setImage] = useState('');
+    const [travelPeriod, setTravelPeriod] = useState('');
+    const [imageURL, setImageURL] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
         onAdd({
-            name,
-            category,
+            title,
+            country,
             price,
             description,
-            image,
+            travelPeriod,
+            imageURL,
         });
 
-        setName('');
-        setCategory('');
+        setTitle('');
+        setCountry('');
         setPrice('');
         setDescription('');
-        setImage('');
-
-        event.target.reset();
-    };
-
-    const handleImageChange = (event) => {
-        const selectedFile = event.target.files[0];
-
-        if (!selectedFile) {
-            setImage('');
-            return;
-        }
-
-        const reader = new FileReader();
-
-        reader.onload = () => {
-            setImage(reader.result);
-        };
-
-        reader.readAsDataURL(selectedFile);
+        setTravelPeriod('');
+        setImageURL('');
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <h2>Add Food</h2>
+            <h2>Add Travel</h2>
 
             <input
                 type="text"
-                placeholder="Food name"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
+                placeholder="Travel title"
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
             />
 
             <input
                 type="text"
-                placeholder="category"
+                placeholder="Country"
                 data-testid={AddEntityCategoryTestId}
-                value={category}
-                onChange={(event) => setCategory(event.target.value)}
+                value={country}
+                onChange={(event) => setCountry(event.target.value)}
             />
 
             <input
@@ -72,15 +56,23 @@ export default function AddEntityForm({ onAdd }) {
             />
 
             <textarea
-                placeholder="Food description"
+                placeholder="Travel description"
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
             />
 
             <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
+                type="text"
+                placeholder="Travel period"
+                value={travelPeriod}
+                onChange={(event) => setTravelPeriod(event.target.value)}
+            />
+
+            <input
+                type="text"
+                placeholder="Image URL"
+                value={imageURL}
+                onChange={(event) => setImageURL(event.target.value)}
             />
 
             <button
