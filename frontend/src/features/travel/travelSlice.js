@@ -105,9 +105,19 @@ const travelSlice = createSlice({
                 state.selectedEntities.push(travelID);
             }
         },
+
+        updateTravel: (state, action) => {
+            const index = state.entities.findIndex(
+                (travel) => travel.travelID === action.payload.travelID
+            );
+
+            if (index !== -1) {
+                state.entities[index] = action.payload;
+            }
+        },
     },
 });
 
-export const { addTravel, deleteTravel, deleteSelectedTravels, toggleCountry, toggleSelectedEntity } = travelSlice.actions;
+export const { addTravel, deleteTravel, updateTravel, deleteSelectedTravels, toggleCountry, toggleSelectedEntity } = travelSlice.actions;
 
 export default travelSlice.reducer;

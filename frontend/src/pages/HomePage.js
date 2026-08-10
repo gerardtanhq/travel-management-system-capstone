@@ -1,14 +1,18 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
 import EntitiesList from '../EntitiesList.js';
 import AddEntityForm from '../AddEntityForm.js';
 import FilterEntitiesForm from '../FilterEntitiesForm.js';
-import { addTravel, deleteTravel, deleteSelectedTravels, toggleSelectedEntity } from '../features/travel/travelSlice.js';
+import { addTravel, updateTravel, deleteTravel, deleteSelectedTravels, toggleSelectedEntity } from '../features/travel/travelSlice.js';
 import Navbar from '../Navbar.js';
 import LoginForm from '../LoginForm';
 import { API_URL } from '../config.js';
+import EditTravelForm from '../EditTravelForm.js';
 
 export default function HomePage() {
     const dispatch = useDispatch();
+
+    const [editingTravel, setEditingTravel] = useState(null);
 
     const token = useSelector((state) => state.auth.token);
     const entities = useSelector((state) => state.travel.entities);
@@ -75,6 +79,45 @@ export default function HomePage() {
 
     const handleDeleteSelected = () => dispatch(deleteSelectedTravels());
 
+    const handleEdit = (travel) => setEditingTravel(travel);
+
+    const handleSaveEdit = async (updatedTravel) => {
+        const response = await fetch(
+            `${API_URL}/travel/${updatedTravel.travelID}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    title: toTitleCase(updatedTravel.title),
+                    description: updatedTravel.description,
+                    price: Number(updatedTravel.price),
+                    country: toTitleCase(updatedTravel.country),
+                    travelPeriod: updatedTravel.travelPeriod,
+                    imageURL: updatedTravel.imageURL,
+                }),
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || 'Unable to update travel.');
+            return;
+        }
+
+        dispatch(updateTravel({
+            ...updatedTravel,
+            title: toTitleCase(updatedTravel.title),
+            country: toTitleCase(updatedTravel.country),
+            price: Number(updatedTravel.price),
+        }));
+
+        setEditingTravel(null);
+    };
+
     return (
         <div className="app-container">
             <h1>SP Travel</h1>
@@ -84,6 +127,18 @@ export default function HomePage() {
             <LoginForm />
 
             {token && <AddEntityForm onAdd={handleAdd} />}
+
+            {token && editingTravel && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <EditTravelForm
+                            travel={editingTravel}
+                            onSave={handleSaveEdit}
+                            onCancel={() => setEditingTravel(null)}
+                        />
+                    </div>
+                </div>
+            )}
 
             <div className="content-layout">
                 <FilterEntitiesForm
@@ -95,6 +150,8 @@ export default function HomePage() {
                 <EntitiesList
                     entities={filteredEntities}
                     onDelete={handleDelete}
+                    onEdit={handleEdit}
+                    isAdmin={Boolean(token)}
                     selectedEntities={selectedEntities}
                     onSelectEntity={handleSelectEntity}
                 />
