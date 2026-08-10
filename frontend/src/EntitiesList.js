@@ -1,7 +1,7 @@
 import Entity from './Entity.js';
 import { EntityTestId } from './testIds.js';
 
-export default function EntitiesList({ entities, onDelete, selectedEntities, onSelectEntity }) {
+export default function EntitiesList({ entities, onDelete, onEdit, isAdmin, selectedEntities, onSelectEntity }) {
     return (
         <div>
             <div>
@@ -11,6 +11,8 @@ export default function EntitiesList({ entities, onDelete, selectedEntities, onS
                             <Entity
                                 entity={entity}
                                 onDelete={onDelete}
+                                onEdit={onEdit}
+                                isAdmin={isAdmin}
                                 selectedEntities={selectedEntities}
                                 onSelectEntity={onSelectEntity}
                             />

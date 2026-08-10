@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { EntitySelectTestId, EntityDeleteTestId, EntityCategoryTestId } from './testIds.js';
 
-export default function Entity({ entity, onDelete, selectedEntities, onSelectEntity }) {
+export default function Entity({ entity, onDelete, onEdit, isAdmin, selectedEntities, onSelectEntity }) {
     return (
         <div className="entity-card">
             <div className="entity-row">
@@ -34,6 +34,15 @@ export default function Entity({ entity, onDelete, selectedEntities, onSelectEnt
                             <Link className="details-button" to={`/travel/${entity.travelID}`}>
                                 View Details
                             </Link>
+
+                            {isAdmin && (
+                                <button
+                                    className="edit-button"
+                                    onClick={() => onEdit(entity)}
+                                >
+                                    Edit
+                                </button>
+                            )}
 
                             <button data-testid={EntityDeleteTestId} onClick={() => onDelete(entity.travelID)}>
                                 Delete
