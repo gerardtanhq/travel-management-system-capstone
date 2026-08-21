@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import EntitiesList from '../EntitiesList.js';
 import AddEntityForm from '../AddEntityForm.js';
 import FilterEntitiesForm from '../FilterEntitiesForm.js';
-import { addTravel, updateTravel, deleteTravel, deleteSelectedTravels, toggleSelectedEntity } from '../features/travel/travelSlice.js';
+import { addTravel, setTravels, updateTravel, deleteTravel, deleteSelectedTravels, toggleSelectedEntity } from '../features/travel/travelSlice.js';
 import Navbar from '../Navbar.js';
 import LoginForm from '../LoginForm';
 import { API_URL } from '../config.js';
@@ -18,6 +18,19 @@ export default function HomePage() {
     const entities = useSelector((state) => state.travel.entities);
     const selectedCountries = useSelector((state) => state.travel.selectedCountries);
     const selectedEntities = useSelector((state) => state.travel.selectedEntities);
+
+    useEffect(() => {
+        const loadTravels = async () => {
+            const response = await fetch(`${API_URL}/travel`);
+            const data = await response.json();
+
+            if (response.ok) {
+                dispatch(setTravels(data));
+            }
+        };
+
+        loadTravels();
+    }, [dispatch]);
 
     const countries = [...new Set(entities.map((entity) => entity.country))];
 
