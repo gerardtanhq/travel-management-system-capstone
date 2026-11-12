@@ -103,7 +103,7 @@ export default function EditTravelForm({ travel, onSave, onCancel }) {
             />
 
             <div className="edit-form-actions">
-                <button type="button" onClick={onCancel}>
+                <button className="cancel-button" type="button" onClick={onCancel}>
                     Cancel
                 </button>
 
