@@ -205,6 +205,12 @@ button:hover {
     box-shadow: 0 8px 16px rgba(244, 63, 94, 0.35);
 }
 
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .travel-period-inputs input {
     width: 90px;
 }
@@ -293,6 +299,21 @@ button:hover {
 .modal-content {
     width: 90%;
     max-width: 850px;
+}
+
+.delete-modal {
+    background-color: #eaf3ff;
+    border: 2px solid #93b9ff;
+    border-radius: 20px;
+    padding: 30px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.delete-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
 }
 
 .edit-button {
@@ -432,6 +453,16 @@ button:hover {
 
 .filter-options button {
     margin-top: 10px;
+}
+
+.cancel-button {
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+.cancel-button:hover {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.35);
 }
 
 /* Responsive Layout */

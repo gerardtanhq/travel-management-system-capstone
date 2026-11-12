@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import EntitiesList from '../EntitiesList.js';
 import AddEntityForm from '../AddEntityForm.js';
 import FilterEntitiesForm from '../FilterEntitiesForm.js';
-import { addTravel, setTravels, updateTravel, deleteTravel, deleteSelectedTravels, toggleSelectedEntity } from '../features/travel/travelSlice.js';
+import { addTravel, setTravels, updateTravel, deleteTravel, toggleSelectedEntity } from '../features/travel/travelSlice.js';
 import Navbar from '../Navbar.js';
 import LoginForm from '../LoginForm';
 import { API_URL } from '../config.js';
@@ -13,6 +13,11 @@ export default function HomePage() {
     const dispatch = useDispatch();
 
     const [editingTravel, setEditingTravel] = useState(null);
+    const [deletingTravelID, setDeletingTravelID] = useState(null);
+    const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
+    const [bulkDeleteCount, setBulkDeleteCount] = useState(0);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [isBulkDeleting, setIsBulkDeleting] = useState(false);
 
     const token = useSelector((state) => state.auth.token);
     const entities = useSelector((state) => state.travel.entities);
@@ -86,11 +91,78 @@ export default function HomePage() {
         dispatch(addTravel(travelToAdd));
     };
 
-    const handleDelete = (travelID) => dispatch(deleteTravel(travelID));
+    const handleDelete = (travelID) => setDeletingTravelID(travelID);
+
+    const confirmDelete = async () => {
+      if (isDeleting) return;
+
+      setIsDeleting(true);
+
+      try {
+        const response = await fetch(`${API_URL}/travel/${deletingTravelID}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          alert("Unable to delete travel listing.");
+          return;
+        }
+
+        dispatch(deleteTravel(deletingTravelID));
+        setDeletingTravelID(null);
+      } catch (error) {
+        alert("Unable to connect to the server.");
+      } finally {
+        setIsDeleting(false);
+      }
+    };
+
+    const handleDeleteSelected = () => {
+      if (selectedEntities.length > 0) {
+        setBulkDeleteCount(selectedEntities.length);
+        setShowBulkDeleteModal(true);
+      }
+    };
+
+    const confirmBulkDelete = async () => {
+      if (isBulkDeleting) return;
+
+      setIsBulkDeleting(true);
+
+      let failed = 0;
+      const travelIDs = [...selectedEntities];
+
+      for (const travelID of travelIDs) {
+        try {
+          const response = await fetch(`${API_URL}/travel/${travelID}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            dispatch(deleteTravel(travelID));
+          } else {
+            failed++;
+          }
+        } catch (error) {
+          failed++;
+        }
+      }
+
+      setIsBulkDeleting(false);
+      setShowBulkDeleteModal(false);
+
+      if (failed > 0) {
+        alert(`${failed} travel listing(s) could not be deleted.`);
+      }
+    };
 
     const handleSelectEntity = (travelID) => dispatch(toggleSelectedEntity(travelID));
-
-    const handleDeleteSelected = () => dispatch(deleteSelectedTravels());
 
     const handleEdit = (travel) => setEditingTravel(travel);
 
@@ -132,43 +204,96 @@ export default function HomePage() {
     };
 
     return (
-        <div className="app-container">
-            <h1>SP Travel</h1>
+      <div className="app-container">
+        <h1>SP Travel</h1>
 
-            <Navbar />
+        <Navbar />
 
-            <LoginForm />
+        <LoginForm />
 
-            {token && <AddEntityForm onAdd={handleAdd} />}
+        {token && <AddEntityForm onAdd={handleAdd} />}
 
-            {token && editingTravel && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <EditTravelForm
-                            travel={editingTravel}
-                            onSave={handleSaveEdit}
-                            onCancel={() => setEditingTravel(null)}
-                        />
-                    </div>
-                </div>
-            )}
+        {token && deletingTravelID !== null && (
+          <div className="modal-overlay">
+            <div className="modal-content delete-modal">
+              <h2>Delete Travel Listing</h2>
 
-            <div className="content-layout">
-                <FilterEntitiesForm
-                    countries={countries}
-                    selectedCountries={selectedCountries}
-                    onDeleteSelected={handleDeleteSelected}
-                />
+              <p>Are you sure you want to delete this listing?</p>
+              <p>This action cannot be undone.</p>
 
-                <EntitiesList
-                    entities={filteredEntities}
-                    onDelete={handleDelete}
-                    onEdit={handleEdit}
-                    isAdmin={Boolean(token)}
-                    selectedEntities={selectedEntities}
-                    onSelectEntity={handleSelectEntity}
-                />
+              <div className="delete-modal-actions">
+                <button
+                  className="cancel-button"
+                  onClick={() => setDeletingTravelID(null)}
+                  disabled={isDeleting}
+                >
+                  No
+                </button>
+
+                <button onClick={confirmDelete} disabled={isDeleting}>
+                  {isDeleting ? "Deleting..." : "Yes, Delete"}
+                </button>
+              </div>
             </div>
+          </div>
+        )}
+
+        {token && showBulkDeleteModal && (
+          <div className="modal-overlay">
+            <div className="modal-content delete-modal">
+              <h2>Delete Selected Travel Listings</h2>
+
+              <p>
+                Are you sure you want to delete the selected travel listings?
+              </p>
+              <p>Selected listings: {bulkDeleteCount}</p>
+              <p>This action cannot be undone.</p>
+
+              <div className="delete-modal-actions">
+                <button
+                  className="cancel-button"
+                  onClick={() => setShowBulkDeleteModal(false)}
+                  disabled={isBulkDeleting}
+                >
+                  No
+                </button>
+                <button onClick={confirmBulkDelete} disabled={isBulkDeleting}>
+                  {isBulkDeleting ? "Deleting..." : "Yes, Delete"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {token && editingTravel && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <EditTravelForm
+                travel={editingTravel}
+                onSave={handleSaveEdit}
+                onCancel={() => setEditingTravel(null)}
+              />
+            </div>
+          </div>
+        )}
+
+        <div className="content-layout">
+          <FilterEntitiesForm
+            countries={countries}
+            selectedCountries={selectedCountries}
+            onDeleteSelected={handleDeleteSelected}
+            isAdmin={Boolean(token)}
+          />
+
+          <EntitiesList
+            entities={filteredEntities}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            isAdmin={Boolean(token)}
+            selectedEntities={selectedEntities}
+            onSelectEntity={handleSelectEntity}
+          />
         </div>
+      </div>
     );
 }
